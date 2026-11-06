@@ -1,0 +1,49 @@
+# Réentraînement automatique planifié du modèle.
+# S'exécute chaque lundi à 03:00 UTC, ou manuellement (onglet Actions > Run workflow).
+# Le nouveau modèle n'est déployé que s'il passe le contrôle qualité de src/train.py ;
+# l'historique (models/historique.csv) est mis à jour dans tous les cas.
+name: Réentraînement du modèle
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installer les dépendances
+        run: pip install streamlit==1.67.0 scikit-learn==1.9.1 pandas==2.3.3 numpy==2.3.5 joblib==1.6.0
+
+      - name: Réentraîner le modèle
+        run: python src/train.py || echo "Contrôle qualité non passé : modèle en production conservé."
+
+      - name: Vérifier que l'application démarre
+        run: |
+          python - <<'EOF'
+          import sys; sys.path.insert(0, "src")
+          from streamlit.testing.v1 import AppTest
+          for p in ["prediction", "performances", "ajouter_cas"]:
+              at = AppTest.from_file(f"app/app_pages/{p}.py", default_timeout=60).run()
+              assert not at.exception, (p, at.exception)
+          print("Application OK")
+          EOF
+
+      - name: Enregistrer le modèle et l'historique
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add models/
+          git diff --cached --quiet || git commit -m "Réentraînement automatique du modèle"
+          git push
