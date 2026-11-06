@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-06 07:24 UTC",
+  "n_patients": 100,
+  "n_malins": 62,
+  "n_benins": 38,
+  "hyperparametres": {
+    "C": 0.3,
+    "penalite": "L1"
+  },
+  "auc_cv": 0.9132005494505495,
+  "auc_cv_std": 0.07727887921190621,
+  "accuracy_cv": 0.857,
+  "sensibilite_cv_seuil_05": 0.8848717948717949,
+  "seuil_clinique": 0.42,
+  "seuil_clinique_bilan": {
+    "sensibilite": 0.9516129032258065,
+    "specificite": 0.7631578947368421,
+    "vrais_positifs": 59,
+    "faux_negatifs": 3,
+    "vrais_negatifs": 29,
+    "faux_positifs": 9
+  },
+  "coefficients": {
+    "perimeter": 0.0,
+    "area": 1.2828,
+    "smoothness": 0.0,
+    "compactness": 0.9283,
+    "symmetry": 0.0,
+    "fractal_dimension": 0.0
+  },
+  "variables": [
+    "perimeter",
+    "area",
+    "smoothness",
+    "compactness",
+    "symmetry",
+    "fractal_dimension"
+  ]
+}
