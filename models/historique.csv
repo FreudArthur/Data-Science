@@ -1,0 +1,2 @@
+date,n_patients,auc_cv,accuracy_cv,seuil_clinique,sensibilite_seuil,specificite_seuil,deploye,raison
+2026-11-06 07:24 UTC,100,0.9132,0.857,0.42,0.9516,0.7632,True,contrôle qualité réussi
